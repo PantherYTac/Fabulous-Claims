@@ -18,4 +18,4 @@
 This plugin is proprietary. All rights reserved. Redistribution, modification, or resale is prohibited without permission.
 
 ## Support
-For questions, feedback, or bug reports, contact PantherYTac or join our community Discord (link coming soon).
+For questions, feedback, or bug reports, contact PantherYTac or join our community Discord.
