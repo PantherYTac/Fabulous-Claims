@@ -50,6 +50,10 @@ public class ClaimProtectionListener implements Listener {
         }
     }
 
+    private boolean isFeatureActive(String path) {
+        return ClaimPlugin.getInstance().getConfig().getBoolean("features." + path, true);
+    }
+
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent e) {
         Player p = e.getPlayer();
@@ -103,6 +107,12 @@ public class ClaimProtectionListener implements Listener {
             }
 
             manager.createClaim(p, loc, preset, true);
+
+            // Check if claim block cleanup is enabled
+            if (isFeatureActive("claim_block_cleanup")) {
+                e.getBlockPlaced().setType(Material.AIR);
+            }
+
             String displayName = (item != null && item.hasItemMeta() && item.getItemMeta().hasDisplayName())
                     ? item.getItemMeta().getDisplayName()
                     : preset.label + " Claim Block";
