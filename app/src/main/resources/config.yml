@@ -1,0 +1,183 @@
+  # ==========================================
+  #         FabulousClaims Configuration
+  # ==========================================
+
+  # ------------------------------------------
+  # 1. Storage Configuration
+  # ------------------------------------------
+  storage:
+    # The backup file name used for legacy migration.
+    # The plugin will auto-migrate claims inside this single file into separate files in the 'claims/' folder on startup.
+    file: claims.yml
+
+  # ------------------------------------------
+  # 2. General Settings
+  # ------------------------------------------
+  # Chat prefix applied to all system notifications sent by the plugin.
+  # Use standard color codes (e.g. &6 for gold, &8 for dark gray, &r for reset).
+  prefix: "&6&lFabulousClaims &8&l|| &r"
+
+  # The default size preset applied when players create claims via blocks or default tools.
+  # User setting: default size is SMALL (32x32x32).
+  default_size_id: SMALL
+
+  # ------------------------------------------
+  # 3. Claims & Trusted Member Limits
+  # ------------------------------------------
+  # Define limits and permissions details.
+  limits:
+    # The default claim limit for normal players without custom permissions.
+    # User setting: default claim number is 2.
+    default: 2
+
+    # Default claim blocks normal players are allowed to use.
+    # Normal players without additional permissions can only use SMALL claim blocks.
+    default-allowed-blocks:
+      - SMALL
+
+    # Custom limits mapping LuckPerms group names (legacy support).
+    groups:
+      vip: 3
+      elite: 5
+      admin: 99
+
+  # Configure limits for the number of trusted players allowed per claim.
+  trust-limits:
+    # -1 represents infinite trusted players.
+    default: 5
+    vip: 10
+    staff: -1
+
+  # ------------------------------------------
+  # 3.5 Custom Permission Tiers
+  # ------------------------------------------
+  # Map custom permission nodes directly to claim limits and allowed claim blocks.
+  # If a player has a permission node defined below, it grants the specified max-claims and allows the specified blocks.
+  # If a player holds multiple permissions, the highest limit is used, and they get access to the union of allowed blocks.
+  custom-permissions:
+    fabulousclaims.vip:
+      max-claims: 5
+      allowed-blocks:
+        - SMALL
+        - MEDIUM
+    fabulousclaims.elite:
+      max-claims: 10
+      allowed-blocks:
+        - SMALL
+        - MEDIUM
+        - LARGE
+
+  # ------------------------------------------
+  # 4. Consolidated Claim Types (Presets)
+  # ------------------------------------------
+  # Configure claim types. Each type configures:
+  # - label: The display name shown in menus.
+  # - x, y, z: Size bounding box coordinates.
+  # - price: Cost to create or upgrade if economy is enabled.
+  # - material: Physical claim block material (Bukkit material name).
+  # - block-name: Physical claim block custom item name.
+  # - block-lore: Physical claim block item lore list.
+  claim-types:
+    SMALL:
+      label: "Small"
+      x: 32
+      y: 32
+      z: 32
+      price: 100.0
+      material: SPONGE
+      block-name: "&aSmall Claim Block"
+      block-lore:
+        - "&7Creates a 32x32x32 claim"
+        - "&7Break to delete the claim"
+    MEDIUM:
+      label: "Medium"
+      x: 64
+      y: 64
+      z: 64
+      price: 250.0
+      material: GOLD_BLOCK
+      block-name: "&6Medium Claim Block"
+      block-lore:
+        - "&7Creates a 64x64x64 claim"
+        - "&7Break to delete the claim"
+    LARGE:
+      label: "Large"
+      x: 96
+      y: 96
+      z: 96
+      price: 500.0
+      material: DIAMOND_BLOCK
+      block-name: "&bLarge Claim Block"
+      block-lore:
+        - "&7Creates a 96x96x96 claim"
+        - "&7Break to delete the claim"
+
+  # ------------------------------------------
+  # 5. World Constraints
+  # ------------------------------------------
+  world-claims:
+    # If true, the list below functions as a whitelist (claims can only be made in these worlds).
+    # If false, the list functions as a blacklist (claims cannot be made in these worlds).
+    whitelist-mode: true
+    worlds:
+      - world
+      - world_nether
+      - world_the_end
+
+  # ------------------------------------------
+  # 6. Feature Control Toggles
+  # ------------------------------------------
+  # Toggle features on or off. Enable or disable elements of the plugin.
+  features:
+    gui_enabled: true          # Toggle interactive chest-GUIs (/claim gui).
+    pvp_in_claims: false       # Set true to allow PvP battles inside claimed lands.
+    visualization: true        # Enable boundary visualizations with particles.
+    flags: true                # Enable claim-specific flags (firespread, explosions).
+    economy: true              # Enable Vault economy system charges.
+    upgrades: true             # Allow upgrading claims via GUI or commands.
+    welcome_messages: true     # Support custom greeting texts for visitors entering claims.
+    custom_names: true         # Support custom user-defined claim names.
+    shared_ownership: true     # Allow multiple owners on the same claim.
+    holographic_banners: true  # Toggle 3D holographic banners above anchor blocks.
+    sub_leasing: true          # Toggle claim sub-leasing & plot renting.
+    particle_themes: true      # Toggle customizable visualizer particle themes.
+    claim_bank: true           # Toggle shared claim economy bank storage.
+    analytics: true            # Toggle visitor history logs & incident analytics.
+
+  # ------------------------------------------
+  # 7. Defaults for Claim Flags
+  # ------------------------------------------
+  # Default flags applied to a claim when it is newly created.
+  defaults:
+    flags:
+      mobspawning: true        # True = mobs will spawn inside claims.
+      firespread: false        # True = fire is allowed to spread or ignite inside claims.
+      tnt: false               # True = TNT & creepers can blow up blocks inside claims.
+      hologram: true           # True = 3D Holographic banner visible over claim anchor block.
+      forrent: false           # True = Claim is open for sub-leasing/renting.
+      claimbank: true          # True = Shared claim bank enabled.
+      analytics: true          # True = Visitor history & incident analytics enabled.
+
+  # ------------------------------------------
+  # 8. Language & Custom Messages
+  # ------------------------------------------
+  # Custom text strings. Use standard color formatting codes.
+  messages:
+    # Messages sent to players when crossing claim borders.
+    enter: "&7You have entered the claim of &f%owner%"
+    leave: "&7You have left the claim of &f%owner%"
+    welcome: "&6[Claim] &f%message%"
+
+    # Upgrades, renaming, and flag updates.
+    flag_set: "&aFlag &e%flag% &aset to &f%value%"
+    upgrade_success: "&aClaim upgraded to &f%size%"
+    upgrade_fail: "&cUpgrade failed: overlaps another claim or insufficient funds."
+    rename_success: "&aClaim renamed successfully."
+    welcome_update_success: "&aWelcome message updated."
+
+    # Error & restriction messages.
+    no_permission: "&cYou do not have permission to do that."
+    claim_limit_reached: "&cYou have reached your claim limit."
+    overlap_detected: "&cCannot claim: this area overlaps another claim."
+    world_disabled: "&cClaims are disabled in this world."
+    cant_afford: "&cYou cannot afford this claim (Cost: %price%)."

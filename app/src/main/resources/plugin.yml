@@ -1,0 +1,45 @@
+name: FabulousClaims
+main: me.PantherYTac.ClaimPlugin
+version: 1.1.0-release
+api-version: 1.18
+author: PantherYTac
+description: >
+  FabulousClaims lets players protect builds with flexible land claims.
+  Supports block-based & command-based claims, trusted players, flags, visualization,
+  upgrades (economy), custom names, welcome messages, and admin tools.
+
+# Optional dependencies
+softdepend: [Vault, LuckPerms]
+
+commands:
+  claim:
+    description: Manage land claims (create, delete, trust, flags, etc.)
+    usage: /claim <subcommand>
+    aliases: [claims, fc]
+    permission: fabulousclaims.use
+    permission-message: §cYou do not have permission to use claims.
+
+permissions:
+  fabulousclaims.use:
+    description: Allows players to use basic claim commands.
+    default: true
+
+  fabulousclaims.giveblock:
+    description: Allows giving claim blocks via /claim giveblock.
+    default: op
+
+  fabulousclaims.admin:
+    description: Allows admins to bypass limits, inspect, transfer, delete claims, and reload config.
+    default: op
+
+  fabulousclaims.flags:
+    description: Allows players to toggle claim flags on their claims.
+    default: true
+
+  fabulousclaims.visualize:
+    description: Allows players to visualize claim boundaries with particles.
+    default: true
+
+  fabulousclaims.upgrade:
+    description: Allows players to upgrade claims to larger size presets (requires economy if enabled).
+    default: true
