@@ -265,7 +265,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter {
                 Claim claim = claimOpt.get();
 
                 // Prevent command deletion of block‑placed claims unless admin
-                if (claim.isCreatedByBlock() && !p.hasPermission("fabulousclaims.admin")) {
+                if (claim.isCreatedByBlock() && !p.hasPermission("fabulousclaims.admin") && !feature("claim_block_cleanup", false)) {
                     plugin.sendPrefixed(p, "§cThis claim was created by placing a claim block. Break the block to delete it.");
                     return true;
                 }
