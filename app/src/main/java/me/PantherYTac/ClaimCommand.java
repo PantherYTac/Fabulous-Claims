@@ -36,22 +36,56 @@ public class ClaimCommand implements CommandExecutor, TabCompleter {
             String prefix = plugin.getPrefix(); // pulls from config
             sender.sendMessage(prefix + "§eAvailable commands:");
             sender.sendMessage("§a/claim create <sizeId> §7- Create a claim at your location (command-based).");
-            sender.sendMessage("§b/claim giveblock <sizeId> §7- Get a claim block item (block-based).");
+            sender.sendMessage("§f/claim list §7- Show all your claims.");
             sender.sendMessage("§c/claim delete §7- Delete the claim you are inside (command claims only).");
             sender.sendMessage("§a/claim add <player> §7- Trust a player in your claim.");
             sender.sendMessage("§e/claim remove <player> §7- Untrust a player in your claim.");
             sender.sendMessage("§d/claim transferOwnership <player> §7- Transfer ownership of this claim.");
-            if (feature("gui_enabled", true)) sender.sendMessage("§d/claim gui §7- Open the claim management GUI.");
-            sender.sendMessage("§f/claim list §7- Show all your claims.");
-            if (feature("visualization", true)) sender.sendMessage("§b/claim visualize §7- Toggle particle visualization of claim boundaries.");
-            if (feature("custom_names", true)) sender.sendMessage("§a/claim name <text> §7- Set a custom name for your claim.");
-            if (feature("welcome_messages", true)) sender.sendMessage("§a/claim welcome <text> §7- Set a welcome message for your claim.");
-            if (feature("flags", true)) sender.sendMessage("§a/claim flag <key> <on|off> §7- Toggle claim flags.");
-            if (feature("upgrades", true)) sender.sendMessage("§a/claim upgrade <sizeId> §7- Upgrade your claim to a larger preset.");
-            if (feature("claim_bank", true)) sender.sendMessage("§6/claim bank §7- Access shared claim bank.");
-            if (feature("sub_leasing", true)) sender.sendMessage("§3/claim rent §7- Access sub-leasing / rental console.");
-            if (feature("particle_themes", true)) sender.sendMessage("§b/claim theme <name> §7- Change boundary particle theme.");
-            if (feature("analytics", true)) sender.sendMessage("§d/claim analytics §7- View visitor and incident logs.");
+
+            if (sender.hasPermission("fabulousclaims.giveblock")) {
+                sender.sendMessage("§b/claim giveblock <sizeId> §7- Get a claim block item (block-based).");
+            }            
+
+            if (feature("gui_enabled", true)) {
+                sender.sendMessage("§d/claim gui §7- Open the claim management GUI.");
+            }
+
+            if (feature("visualization", true) && sender.hasPermission("fabulousclaims.visualize")) {
+                sender.sendMessage("§b/claim visualize §7- Toggle particle visualization of claim boundaries.");
+            }
+
+            if (feature("custom_names", true)) {
+                sender.sendMessage("§a/claim name <text> §7- Set a custom name for your claim.");
+            }
+            
+            if (feature("welcome_messages", true)) {
+                sender.sendMessage("§a/claim welcome <text> §7- Set a welcome message for your claim.");
+            }
+
+            if (feature("flags", true) && sender.hasPermission("fabulousclaims.flags")) {
+                sender.sendMessage("§a/claim flag <key> <on|off> §7- Toggle claim flags.");
+            }
+
+            if (feature("upgrades", true) && sender.hasPermission("fabulousclaims.upgrade")) {
+                sender.sendMessage("§a/claim upgrade <sizeId> §7- Upgrade your claim to a larger preset.");
+            }
+
+            if (feature("claim_bank", true)) {
+                sender.sendMessage("§6/claim bank §7- Access shared claim bank.");
+            }
+
+            if (feature("sub_leasing", true)) {
+                sender.sendMessage("§3/claim rent §7- Access sub-leasing / rental console.");
+            }
+
+            if (feature("particle_themes", true)) {
+                sender.sendMessage("§b/claim theme <name> §7- Change boundary particle theme.");
+            }
+
+            if (feature("analytics", true)) {
+                sender.sendMessage("§d/claim analytics §7- View visitor and incident logs.");
+            }
+
             if (sender.hasPermission("fabulousclaims.admin")) {
                 sender.sendMessage("§c/claim admin <inspect|delete|transfer|move|reload> §7- Admin tools.");
             }
