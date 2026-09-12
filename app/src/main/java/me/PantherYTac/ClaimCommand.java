@@ -300,6 +300,10 @@ public class ClaimCommand implements CommandExecutor, TabCompleter {
                 }
 
                 OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
+                if (target.getUniqueId().equals(p.getUniqueId())) {
+                    plugin.sendPrefixed(p, "§cYou cannot add yourself as a trusted player.");
+                    return true;
+                }
                 boolean added = manager.addTrusted(claim, target);
 
                 if (added) {
@@ -328,6 +332,10 @@ public class ClaimCommand implements CommandExecutor, TabCompleter {
                 }
 
                 OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
+                if (target.getUniqueId().equals(p.getUniqueId())) {
+                    plugin.sendPrefixed(p, "§cYou cannot remove yourself from the trusted list.");
+                    return true;
+                }
                 boolean removed = manager.removeTrusted(claimOpt.get(), target);
 
                 if (removed) {
