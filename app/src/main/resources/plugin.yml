@@ -24,6 +24,10 @@ permissions:
     description: Allows players to use basic claim commands.
     default: true
 
+  fabulousclaims.create:
+    description: Allows players to use the create command.
+    default: true
+
   fabulousclaims.giveblock:
     description: Allows giving claim blocks via /claim giveblock.
     default: op

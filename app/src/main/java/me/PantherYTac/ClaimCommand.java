@@ -35,7 +35,11 @@ public class ClaimCommand implements CommandExecutor, TabCompleter {
             // Color-coded help output with all features
             String prefix = plugin.getPrefix(); // pulls from config
             sender.sendMessage(prefix + "§eAvailable commands:");
-            sender.sendMessage("§a/claim create <sizeId> §7- Create a claim at your location (command-based).");
+
+            if (sender.hasPermission("fabulousclaims.create")) {
+                sender.sendMessage("§a/claim create <sizeId> §7- Create a claim at your location (command-based).");
+            }
+
             sender.sendMessage("§f/claim list §7- Show all your claims.");
             sender.sendMessage("§c/claim delete §7- Delete the claim you are inside (command claims only).");
             sender.sendMessage("§a/claim add <player> §7- Trust a player in your claim.");
@@ -149,6 +153,10 @@ public class ClaimCommand implements CommandExecutor, TabCompleter {
                 // Check if claims are enabled in this world
                 if (!plugin.isClaimsEnabled(p.getWorld())) {
                     plugin.sendPrefixed(p, "§cClaims are disabled in this world.");
+                    return true;
+                }
+                if (!sender.hasPermission("fabulousclaims.create")) {
+                    plugin.sendPrefixed(sender, "§cYou are not allowed to use /claim create.");
                     return true;
                 }
 
