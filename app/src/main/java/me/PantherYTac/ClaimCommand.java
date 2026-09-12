@@ -37,61 +37,61 @@ public class ClaimCommand implements CommandExecutor, TabCompleter {
             sender.sendMessage(prefix + "§eAvailable commands:");
 
             if (sender.hasPermission("fabulousclaims.create")) {
-                sender.sendMessage("§a/claim create <sizeId> §7- Create a claim at your location (command-based).");
+                sender.sendMessage("§2/claim create <sizeId> §7- Create a claim at your location.");
             }
 
-            sender.sendMessage("§f/claim list §7- Show all your claims.");
-            sender.sendMessage("§c/claim delete §7- Delete the claim you are inside (command claims only).");
-            sender.sendMessage("§a/claim add <player> §7- Trust a player in your claim.");
-            sender.sendMessage("§e/claim remove <player> §7- Untrust a player in your claim.");
-            sender.sendMessage("§d/claim transferOwnership <player> §7- Transfer ownership of this claim.");
+            sender.sendMessage("§3/claim add <player> §7- Trust a player in your claim.");
+            sender.sendMessage("§5/claim remove <player> §7- Untrust a player in your claim.");
+            sender.sendMessage("§f/claim transfer <player> §7- Transfer ownership of this claim.");
+            sender.sendMessage("§8/claim list §7- Show all your claims.");
+            sender.sendMessage("§4/claim delete §7- Delete the claim you are inside.");
 
             if (sender.hasPermission("fabulousclaims.giveblock")) {
-                sender.sendMessage("§b/claim giveblock <sizeId> §7- Get a claim block item (block-based).");
-            }            
+                sender.sendMessage("§6/claim giveblock <sizeId> §7- Get a claim block item.");
+            }
 
             if (feature("gui_enabled", true)) {
-                sender.sendMessage("§d/claim gui §7- Open the claim management GUI.");
+                sender.sendMessage("§3/claim gui §7- Open the claim management GUI.");
             }
 
             if (feature("visualization", true) && sender.hasPermission("fabulousclaims.visualize")) {
-                sender.sendMessage("§b/claim visualize §7- Toggle particle visualization of claim boundaries.");
+                sender.sendMessage("§5/claim visualize §7- Toggle particle visualization of claim boundaries.");
             }
 
             if (feature("custom_names", true)) {
-                sender.sendMessage("§a/claim name <text> §7- Set a custom name for your claim.");
+                sender.sendMessage("§2/claim name <text> §7- Set a custom name for your claim.");
             }
-            
+
             if (feature("welcome_messages", true)) {
-                sender.sendMessage("§a/claim welcome <text> §7- Set a welcome message for your claim.");
+                sender.sendMessage("§3/claim welcome <text> §7- Set a welcome message for your claim.");
             }
 
             if (feature("flags", true) && sender.hasPermission("fabulousclaims.flags")) {
-                sender.sendMessage("§a/claim flag <key> <on|off> §7- Toggle claim flags.");
+                sender.sendMessage("§f/claim flag <key> <on|off> §7- Toggle claim flags.");
             }
 
             if (feature("upgrades", true) && sender.hasPermission("fabulousclaims.upgrade")) {
-                sender.sendMessage("§a/claim upgrade <sizeId> §7- Upgrade your claim to a larger preset.");
+                sender.sendMessage("§6/claim upgrade <sizeId> §7- Upgrade your claim to a larger preset.");
             }
 
             if (feature("claim_bank", true)) {
-                sender.sendMessage("§6/claim bank §7- Access shared claim bank.");
+                sender.sendMessage("§8/claim bank §7- Access shared claim bank.");
             }
 
             if (feature("sub_leasing", true)) {
-                sender.sendMessage("§3/claim rent §7- Access sub-leasing / rental console.");
+                sender.sendMessage("§5/claim rent §7- Access sub-leasing / rental console.");
             }
 
             if (feature("particle_themes", true)) {
-                sender.sendMessage("§b/claim theme <name> §7- Change boundary particle theme.");
+                sender.sendMessage("§3/claim theme <name> §7- Change boundary particle theme.");
             }
 
             if (feature("analytics", true)) {
-                sender.sendMessage("§d/claim analytics §7- View visitor and incident logs.");
+                sender.sendMessage("§2/claim analytics §7- View visitor and incident logs.");
             }
 
             if (sender.hasPermission("fabulousclaims.admin")) {
-                sender.sendMessage("§c/claim admin <inspect|delete|transfer|move|reload> §7- Admin tools.");
+                sender.sendMessage("§4/claim admin <inspect|delete|transfer|move|reload> §7- Admin tools.");
             }
             return true;
         }
@@ -338,13 +338,13 @@ public class ClaimCommand implements CommandExecutor, TabCompleter {
                 return true;
             }
  
-            case "transferownership": {
+            case "transfer": {
                 if (p == null) {
                     plugin.sendPrefixed(sender, "§cOnly players can transfer ownership of claims.");
                     return true;
                 }
                 if (args.length < 2) {
-                    plugin.sendPrefixed(p, "§eUsage: /claim transferOwnership <player>");
+                    plugin.sendPrefixed(p, "§eUsage: /claim transfer <player>");
                     return true;
                 }
 
@@ -756,33 +756,104 @@ public class ClaimCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (args.length == 1) {
-            List<String> base = new ArrayList<>(Arrays.asList("create","giveblock","delete","add","remove","transferownership","gui","list"));
-            if (feature("visualization", true)) base.add("visualize");
-            if (feature("custom_names", true)) base.add("name");
-            if (feature("welcome_messages", true)) base.add("welcome");
-            if (feature("flags", true)) base.add("flag");
-            if (feature("upgrades", true)) base.add("upgrade");
-            if (feature("claim_bank", true)) base.add("bank");
-            if (feature("sub_leasing", true)) base.add("rent");
-            if (feature("particle_themes", true)) base.add("theme");
-            if (feature("analytics", true)) base.add("analytics");
-            base.add("admin");
+            List<String> base = new ArrayList<>(Arrays.asList("add","remove","transfer","list","delete"));
+
+            if (sender.hasPermission("fabulousclaims.create")) {
+                base.add("create");
+            }
+
+            if (sender.hasPermission("fabulousclaims.giveblock")) {
+                base.add("giveblock");
+            }
+
+            if (feature("gui_enabled", true)) {
+                base.add("gui");
+            }
+
+            if (feature("visualization", true) && sender.hasPermission("fabulousclaims.visualize")) {
+                base.add("visualize");
+            }
+            
+            if (feature("custom_names", true)) {
+                base.add("name");
+            }
+
+            if (feature("welcome_messages", true)) {
+                base.add("welcome");
+            }
+
+            if (feature("flags", true) && sender.hasPermission("fabulousclaims.flags")) {
+                base.add("flag");
+            }
+
+            if (feature("upgrades", true) && sender.hasPermission("fabulousclaims.upgrade")) {
+                base.add("upgrade");
+            }
+
+            if (feature("claim_bank", true)) {
+                base.add("bank");
+            }
+
+            if (feature("sub_leasing", true)) {
+                base.add("rent");
+            }
+
+            if (feature("particle_themes", true) && sender.hasPermission("fabulousclaims.visualize")) {
+                base.add("theme");
+            }
+
+            if (feature("analytics", true)) {
+                base.add("analytics");
+            }
+
+            if (sender.hasPermission("fabulousclaims.admin")) {
+                base.add("admin");
+            }
+
             return base;
         }
 
         if (args.length == 2) {
             switch (args[0].toLowerCase(Locale.ROOT)) {
                 case "create":
+                    if (sender.hasPermission("fabulousclaims.create")) {
+                        return new ArrayList<>(manager.getSizePresets().keySet());
+                    } else {
+                        return Collections.emptyList();
+                    }
                 case "giveblock":
+                    if (sender.hasPermission("fabulousclaims.giveblock")) {
+                        return new ArrayList<>(manager.getSizePresets().keySet());
+                    } else {
+                        return Collections.emptyList();
+                    }
                 case "upgrade":
-                    return new ArrayList<>(manager.getSizePresets().keySet());
+                    if (feature("upgrades", true) && sender.hasPermission("fabulousclaims.upgrade")) {
+                        return new ArrayList<>(manager.getSizePresets().keySet());
+                    } else {
+                        return Collections.emptyList();
+                    }
                 case "flag":
-                    return Arrays.asList("mobspawning", "firespread", "tnt", "hologram", "forrent", "claimbank", "analytics");
+                    if (feature("flags", true) && sender.hasPermission("fabulousclaims.flags")) {
+                        return Arrays.asList("mobspawning", "firespread", "tnt", "hologram", "forrent", "claimbank", "analytics");
+                    } else {
+                        return Collections.emptyList();
+                    }
                 case "theme":
-                    return Arrays.asList("DEFAULT", "CYAN", "ENCHANTMENT", "HEART", "PORTAL");
+                    if (feature("particle_themes", true) && sender.hasPermission("fabulousclaims.visualize")) {
+                        return Arrays.asList("DEFAULT", "CYAN", "ENCHANTMENT", "HEART", "PORTAL");
+                    } else {
+                        return Collections.emptyList();
+                    }
                 case "admin":
-                    return Arrays.asList("inspect","delete","transfer","move","reload");
-                case "transferownership":
+                    if (sender.hasPermission("fabulousclaims.admin")) {
+                        return Arrays.asList("inspect","delete","transfer","move","reload");
+                    } else {
+                        return Collections.emptyList();
+                    }
+                case "add":
+                case "remove":
+                case "transfer": {
                     List<String> names = new ArrayList<>();
                     for (Player online : Bukkit.getOnlinePlayers()) {
                         if (sender instanceof Player && online.getUniqueId().equals(((Player) sender).getUniqueId())) {
@@ -791,6 +862,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter {
                         names.add(online.getName());
                     }
                     return names;
+                }
             }
         }
 
@@ -810,6 +882,16 @@ public class ClaimCommand implements CommandExecutor, TabCompleter {
 
         if (args.length == 3 && "flag".equalsIgnoreCase(args[0])) {
             return Arrays.asList("on","off");
+        }
+
+        // Suggest player names for /claim admin transfer <player>
+        if (args.length == 3 && "admin".equalsIgnoreCase(args[0]) && "transfer".equalsIgnoreCase(args[1])
+                && sender.hasPermission("fabulousclaims.admin")) {
+            List<String> names = new ArrayList<>();
+            for (Player online : Bukkit.getOnlinePlayers()) {
+                names.add(online.getName());
+            }
+            return names;
         }
 
         return Collections.emptyList();
