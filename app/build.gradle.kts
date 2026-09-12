@@ -5,13 +5,12 @@
  * For more details on building Java & JVM projects, please refer to https://docs.gradle.org/9.2.0/userguide/building_java_projects.html in the Gradle documentation.
  */
 
-base {
-    archivesName.set("FabulousClaims")
+plugins {
+    `java-library`
 }
 
-plugins {
-    // Apply the application plugin to add support for building a CLI application in Java.
-    application
+base {
+    archivesName.set("FabulousClaims")
 }
 
 repositories {
@@ -42,11 +41,6 @@ java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(26)
     }
-}
-
-application {
-    // Define the main class for the application.
-    mainClass = "app.App"
 }
 
 tasks.named<Test>("test") {
