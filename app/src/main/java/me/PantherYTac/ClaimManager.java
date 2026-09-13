@@ -7,6 +7,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.generator.WorldInfo;
 
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.model.user.User;
@@ -336,8 +337,10 @@ public class ClaimManager {
 
     public Claim createClaim(Player owner, Location center, SizePreset preset, boolean createdByBlock) {
         UUID id = UUID.randomUUID();
+        int height = (this.plugin.feature("vertical_claim", false)) ? center.getWorld().getMaxHeight() : preset.y;
+
         Claim claim = new Claim(id, owner.getUniqueId(), center,
-                preset.x, preset.y, preset.z, preset.id, createdByBlock);
+                preset.x, height, preset.z, preset.id, createdByBlock);
 
         // seed flags from config defaults
         ConfigurationSection defFlags = plugin.getConfig().getConfigurationSection("defaults.flags");

@@ -22,10 +22,6 @@ public class ClaimCommand implements CommandExecutor, TabCompleter {
         this.blockManager = blockManager;
     }
 
-    private boolean feature(String path, boolean def) {
-        return plugin.getConfig().getBoolean("features." + path, def);
-    }
-
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         Player p = (sender instanceof Player) ? (Player) sender : null;
@@ -50,43 +46,43 @@ public class ClaimCommand implements CommandExecutor, TabCompleter {
                 sender.sendMessage("§6/claim giveblock <sizeId> §7- Get a claim block item.");
             }
 
-            if (feature("gui_enabled", true)) {
+            if (this.plugin.feature("gui_enabled", true)) {
                 sender.sendMessage("§3/claim gui §7- Open the claim management GUI.");
             }
 
-            if (feature("visualization", true) && sender.hasPermission("fabulousclaims.visualize")) {
+            if (this.plugin.feature("visualization", true) && sender.hasPermission("fabulousclaims.visualize")) {
                 sender.sendMessage("§5/claim visualize §7- Toggle particle visualization of claim boundaries.");
             }
 
-            if (feature("custom_names", true)) {
+            if (this.plugin.feature("custom_names", true)) {
                 sender.sendMessage("§2/claim name <text> §7- Set a custom name for your claim.");
             }
 
-            if (feature("welcome_messages", true)) {
+            if (this.plugin.feature("welcome_messages", true)) {
                 sender.sendMessage("§3/claim welcome <text> §7- Set a welcome message for your claim.");
             }
 
-            if (feature("flags", true) && sender.hasPermission("fabulousclaims.flags")) {
+            if (this.plugin.feature("flags", true) && sender.hasPermission("fabulousclaims.flags")) {
                 sender.sendMessage("§f/claim flag <key> <on|off> §7- Toggle claim flags.");
             }
 
-            if (feature("upgrades", true) && sender.hasPermission("fabulousclaims.upgrade")) {
+            if (this.plugin.feature("upgrades", true) && sender.hasPermission("fabulousclaims.upgrade")) {
                 sender.sendMessage("§6/claim upgrade <sizeId> §7- Upgrade your claim to a larger preset.");
             }
 
-            if (feature("claim_bank", true)) {
+            if (this.plugin.feature("claim_bank", true)) {
                 sender.sendMessage("§8/claim bank §7- Access shared claim bank.");
             }
 
-            if (feature("sub_leasing", true)) {
+            if (this.plugin.feature("sub_leasing", true)) {
                 sender.sendMessage("§5/claim rent §7- Access sub-leasing / rental console.");
             }
 
-            if (feature("particle_themes", true)) {
+            if (this.plugin.feature("particle_themes", true)) {
                 sender.sendMessage("§3/claim theme <name> §7- Change boundary particle theme.");
             }
 
-            if (feature("analytics", true)) {
+            if (this.plugin.feature("analytics", true)) {
                 sender.sendMessage("§2/claim analytics §7- View visitor and incident logs.");
             }
 
@@ -101,7 +97,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter {
         switch (sub) {
             case "bank": {
                 if (p == null) { plugin.sendPrefixed(sender, "§cOnly players can manage claim bank."); return true; }
-                if (!feature("claim_bank", true)) { plugin.sendPrefixed(p, "§cClaim bank is disabled by server config."); return true; }
+                if (!this.plugin.feature("claim_bank", true)) { plugin.sendPrefixed(p, "§cClaim bank is disabled by server config."); return true; }
                 Optional<Claim> claimOpt = manager.getOwnedClaimAt(p.getUniqueId(), p.getLocation());
                 if (claimOpt.isEmpty()) { plugin.sendPrefixed(p, "§cStand inside your claim to open claim bank."); return true; }
                 List<Claim> list = manager.getClaimsOf(p.getUniqueId());
@@ -110,7 +106,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter {
             }
             case "rent": {
                 if (p == null) { plugin.sendPrefixed(sender, "§cOnly players can manage claim rent."); return true; }
-                if (!feature("sub_leasing", true)) { plugin.sendPrefixed(p, "§cSub-leasing is disabled by server config."); return true; }
+                if (!this.plugin.feature("sub_leasing", true)) { plugin.sendPrefixed(p, "§cSub-leasing is disabled by server config."); return true; }
                 Optional<Claim> claimOpt = manager.getClaimAt(p.getLocation());
                 if (claimOpt.isEmpty()) { plugin.sendPrefixed(p, "§cStand inside a claim to view rent options."); return true; }
                 List<Claim> list = manager.getClaimsOf(p.getUniqueId());
@@ -120,7 +116,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter {
             }
             case "theme": {
                 if (p == null) { plugin.sendPrefixed(sender, "§cOnly players can change particle themes."); return true; }
-                if (!feature("particle_themes", true)) { plugin.sendPrefixed(p, "§cParticle themes are disabled by server config."); return true; }
+                if (!this.plugin.feature("particle_themes", true)) { plugin.sendPrefixed(p, "§cParticle themes are disabled by server config."); return true; }
                 if (args.length < 2) {
                     plugin.sendPrefixed(p, "§eUsage: /claim theme <DEFAULT|CYAN|ENCHANTMENT|HEART|PORTAL>");
                     return true;
@@ -132,7 +128,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter {
             }
             case "analytics": {
                 if (p == null) { plugin.sendPrefixed(sender, "§cOnly players can view analytics."); return true; }
-                if (!feature("analytics", true)) { plugin.sendPrefixed(p, "§cAnalytics is disabled by server config."); return true; }
+                if (!this.plugin.feature("analytics", true)) { plugin.sendPrefixed(p, "§cAnalytics is disabled by server config."); return true; }
                 Optional<Claim> claimOpt = manager.getOwnedClaimAt(p.getUniqueId(), p.getLocation());
                 if (claimOpt.isEmpty()) { plugin.sendPrefixed(p, "§cStand inside your claim to view analytics."); return true; }
                 List<Claim> list = manager.getClaimsOf(p.getUniqueId());
@@ -265,7 +261,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter {
                 Claim claim = claimOpt.get();
 
                 // Prevent command deletion of block‑placed claims unless admin
-                if (claim.isCreatedByBlock() && !p.hasPermission("fabulousclaims.admin") && !feature("claim_block_cleanup", false)) {
+                if (claim.isCreatedByBlock() && !p.hasPermission("fabulousclaims.admin") && !this.plugin.feature("claim_block_cleanup", false)) {
                     plugin.sendPrefixed(p, "§cThis claim was created by placing a claim block. Break the block to delete it.");
                     return true;
                 }
@@ -332,10 +328,6 @@ public class ClaimCommand implements CommandExecutor, TabCompleter {
                 }
 
                 OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
-                if (target.getUniqueId().equals(p.getUniqueId())) {
-                    plugin.sendPrefixed(p, "§cYou cannot remove yourself from the trusted list.");
-                    return true;
-                }
                 boolean removed = manager.removeTrusted(claimOpt.get(), target);
 
                 if (removed) {
@@ -398,7 +390,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter {
                     plugin.sendPrefixed(sender, "§cOnly players can open the claims GUI.");
                     return true;
                 }
-                if (!feature("gui_enabled", true)) {
+                if (!this.plugin.feature("gui_enabled", true)) {
                     plugin.sendPrefixed(p, "§eGUI is disabled by server config.");
                     return true;
                 }
@@ -434,7 +426,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter {
                     plugin.sendPrefixed(sender, "§cOnly players can toggle visualization.");
                     return true;
                 }
-                if (!feature("visualization", true)) {
+                if (!this.plugin.feature("visualization", true)) {
                     plugin.sendPrefixed(p, "§eVisualization is disabled by server config.");
                     return true;
                 }
@@ -453,7 +445,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter {
                     plugin.sendPrefixed(sender, "§cOnly players can rename claims.");
                     return true;
                 }
-                if (!feature("custom_names", true)) {
+                if (!this.plugin.feature("custom_names", true)) {
                     plugin.sendPrefixed(p, "§eCustom names are disabled by server config.");
                     return true;
                 }
@@ -481,7 +473,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter {
                     plugin.sendPrefixed(sender, "§cOnly players can change welcome messages.");
                     return true;
                 }
-                if (!feature("welcome_messages", true)) {
+                if (!this.plugin.feature("welcome_messages", true)) {
                     plugin.sendPrefixed(p, "§eWelcome messages are disabled by server config.");
                     return true;
                 }
@@ -509,7 +501,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter {
                     plugin.sendPrefixed(sender, "§cOnly players can manage claim flags.");
                     return true;
                 }
-                if (!feature("flags", true)) {
+                if (!this.plugin.feature("flags", true)) {
                     plugin.sendPrefixed(p, "§eClaim flags are disabled by server config.");
                     return true;
                 }
@@ -552,7 +544,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter {
                     plugin.sendPrefixed(p, "§cYou lack permission: fabulousclaims.upgrade");
                     return true;
                 }
-                if (!feature("upgrades", true)) {
+                if (!this.plugin.feature("upgrades", true)) {
                     plugin.sendPrefixed(p, "§eClaim upgrades are disabled by server config.");
                     return true;
                 }
@@ -774,43 +766,43 @@ public class ClaimCommand implements CommandExecutor, TabCompleter {
                 base.add("giveblock");
             }
 
-            if (feature("gui_enabled", true)) {
+            if (this.plugin.feature("gui_enabled", true)) {
                 base.add("gui");
             }
 
-            if (feature("visualization", true) && sender.hasPermission("fabulousclaims.visualize")) {
+            if (this.plugin.feature("visualization", true) && sender.hasPermission("fabulousclaims.visualize")) {
                 base.add("visualize");
             }
             
-            if (feature("custom_names", true)) {
+            if (this.plugin.feature("custom_names", true)) {
                 base.add("name");
             }
 
-            if (feature("welcome_messages", true)) {
+            if (this.plugin.feature("welcome_messages", true)) {
                 base.add("welcome");
             }
 
-            if (feature("flags", true) && sender.hasPermission("fabulousclaims.flags")) {
+            if (this.plugin.feature("flags", true) && sender.hasPermission("fabulousclaims.flags")) {
                 base.add("flag");
             }
 
-            if (feature("upgrades", true) && sender.hasPermission("fabulousclaims.upgrade")) {
+            if (this.plugin.feature("upgrades", true) && sender.hasPermission("fabulousclaims.upgrade")) {
                 base.add("upgrade");
             }
 
-            if (feature("claim_bank", true)) {
+            if (this.plugin.feature("claim_bank", true)) {
                 base.add("bank");
             }
 
-            if (feature("sub_leasing", true)) {
+            if (this.plugin.feature("sub_leasing", true)) {
                 base.add("rent");
             }
 
-            if (feature("particle_themes", true) && sender.hasPermission("fabulousclaims.visualize")) {
+            if (this.plugin.feature("particle_themes", true) && sender.hasPermission("fabulousclaims.visualize")) {
                 base.add("theme");
             }
 
-            if (feature("analytics", true)) {
+            if (this.plugin.feature("analytics", true)) {
                 base.add("analytics");
             }
 
@@ -836,19 +828,19 @@ public class ClaimCommand implements CommandExecutor, TabCompleter {
                         return Collections.emptyList();
                     }
                 case "upgrade":
-                    if (feature("upgrades", true) && sender.hasPermission("fabulousclaims.upgrade")) {
+                    if (this.plugin.feature("upgrades", true) && sender.hasPermission("fabulousclaims.upgrade")) {
                         return new ArrayList<>(manager.getSizePresets().keySet());
                     } else {
                         return Collections.emptyList();
                     }
                 case "flag":
-                    if (feature("flags", true) && sender.hasPermission("fabulousclaims.flags")) {
+                    if (this.plugin.feature("flags", true) && sender.hasPermission("fabulousclaims.flags")) {
                         return Arrays.asList("mobspawning", "firespread", "tnt", "hologram", "forrent", "claimbank", "analytics");
                     } else {
                         return Collections.emptyList();
                     }
                 case "theme":
-                    if (feature("particle_themes", true) && sender.hasPermission("fabulousclaims.visualize")) {
+                    if (this.plugin.feature("particle_themes", true) && sender.hasPermission("fabulousclaims.visualize")) {
                         return Arrays.asList("DEFAULT", "CYAN", "ENCHANTMENT", "HEART", "PORTAL");
                     } else {
                         return Collections.emptyList();

@@ -89,4 +89,8 @@ public class ClaimPlugin extends JavaPlugin {
             return !worlds.contains(world.getName());
         }
     }
+
+    public boolean feature(String path, boolean def) {
+        return getConfig().getBoolean("features." + path, def);
+    }
 }

@@ -13,7 +13,7 @@ softdepend: [Vault, LuckPerms]
 
 commands:
   claim:
-    description: Manage land claims (create, delete, trust, flags, etc.)
+    description: Manage land claims
     usage: /claim <subcommand>
     aliases: [claims, fc]
     permission: fabulousclaims.use

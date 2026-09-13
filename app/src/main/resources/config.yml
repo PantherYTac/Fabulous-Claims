@@ -144,6 +144,7 @@
     claim_bank: true           # Toggle shared claim economy bank storage.
     analytics: true            # Toggle visitor history logs & incident analytics.
     claim_block_cleanup: false # Toggle for cleaning up claim blocks after placing.
+    vertical_claim: false      # Toggle for claims that span entire world height.
 
   # ------------------------------------------
   # 7. Defaults for Claim Flags
